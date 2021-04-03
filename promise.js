@@ -113,7 +113,7 @@ function resolvePromise(promise2, x, resolve, reject) {
                     reject(r);
                 });
 
-            }else{
+            } else {
                 //PromiseA+2.3.3.4
                 if (used) return;
                 used = true;
@@ -130,6 +130,38 @@ function resolvePromise(promise2, x, resolve, reject) {
         resolve(x);
     }
 }
+Promise.resolve = function (param) {
+    if (param instanceof Promise) {
+        return param;
+    }
+    return new Promise((resolve, reject) => {
+        if (param && param.then && typeof param.then === 'function') {
+            setTimeout(() => {
+                param.then(resolve, reject);
+            });
+        } else {
+            resolve(param);
+        }
+    });
+}
+Promise.resolve().then(() => {
+    console.log(0);
+    return Promise.resolve(4);
+  }).then((res) => {
+    console.log(res);
+  });
+  
+  Promise.resolve().then(() => {
+    console.log(1);
+  }).then(() => {
+    console.log(2);
+  }).then(() => {
+    console.log(3);
+  }).then(() => {
+    console.log(5);
+  }).then(() => {
+    console.log(6);
+  });
 
 Promise.defer = Promise.deferred = function () {
     let dfd = {};
